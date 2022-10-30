@@ -12,7 +12,7 @@ import {
 import { ConversionInput } from "../components/ConversionInput";
 import { Button } from "../components/Button";
 import colors from "../constants/colors";
-import { KeyboardSpacer } from "../components/KeyboradSpacer";
+import { KeyboardSpacer } from "../components/KeyboardSpacer";
 
 const screen = Dimensions.get("window");
 
