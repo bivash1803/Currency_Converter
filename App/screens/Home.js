@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { format } from "date-fns";
 import {
   View,
@@ -12,6 +12,7 @@ import {
 import { ConversionInput } from "../components/ConversionInput";
 import { Button } from "../components/Button";
 import colors from "../constants/colors";
+import { KeyboardSpacer } from "../components/KeyboradSpacer";
 
 const screen = Dimensions.get("window");
 
@@ -20,6 +21,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.blue,
     justifyContent: "center",
+  },
+  content: {
+    paddingTop: screen.width * 0.2,
   },
   logoContainer: {
     justifyContent: "center",
@@ -55,53 +59,57 @@ export default () => {
   const conversionRate = 0.845;
   const date = "2022-10-27";
 
+  const [scrollEbabled, setScrollEnabled] = useState(false);
+
+
+
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <StatusBar // не элемент а просто найстройка
-          barStyle="light-content"
-          backgroundColor={colors.blue}
-        />
+      <StatusBar // не элемент а просто найстройка
+        barStyle="light-content"
+        backgroundColor={colors.blue}
+      />
+      <ScrollView scrollEnabled={scrollEbabled}>
+        <View style={styles.content}>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logoBackground}
+              source={require("../assets/images/background.png")} // автоматически подбирает 1х 2х или 3х
+              resizeMode="contain"
+            />
+            <Image
+              style={styles.logo}
+              source={require("../assets/images/logo.png")} // автоматически подбирает 1х 2х или 3х
+              resizeMode="contain" // рассчитать так чтобы вся иконка поместилась и не обрезлать одним из измерений шириной или высотой
+            />
+          </View>
 
-        <View style={styles.logoContainer}>
-          <Image
-            style={styles.logoBackground}
-            source={require("../assets/images/background.png")} // автоматически подбирает 1х 2х или 3х
-            resizeMode="contain"
+          <Text style={styles.textHeader}>Currency Converter</Text>
+
+          <ConversionInput
+            text={baseCurrency}
+            onButtonPress={() => alert("Hi")}
+            keyboardType="numeric"
+            onChangeText={(text) => console.log("text", text)}
           />
-          <Image
-            style={styles.logo}
-            source={require("../assets/images/logo.png")} // автоматически подбирает 1х 2х или 3х
-            resizeMode="contain" // рассчитать так чтобы вся иконка поместилась и не обрезлать одним из измерений шириной или высотой
+
+          <ConversionInput
+            text={quoteCurrency}
+            value="123"
+            onButtonPress={() => alert("todo!")}
+            editable={false} // отключает ввод
           />
+
+          <Text style={styles.text}>
+            {`1 ${baseCurrency} = ${conversionRate} ${quoteCurrency} as of ${format(
+              new Date(date),
+              "MMMM do, yyyy"
+            )}`}
+          </Text>
+
+          <Button text="reverse" onPress={() => alert("TODO")} />
+          <KeyboardSpacer onToggle={visible => setScrollEnabled(visible)} />
         </View>
-
-        <Text style={styles.textHeader}>Currency Converter</Text>
-
-        <ConversionInput
-          text={baseCurrency}
-          onButtonPress={() => alert("Hi")}
-          keyboardType="numeric"
-          onChangeText={(text) => console.log("text", text)}
-        />
-
-        <ConversionInput
-          text={quoteCurrency}
-          value="123"
-          onButtonPress={() => alert("todo!")}
-          editable={false} // отключает ввод
-        />
-
-        <Text
-          style={styles.text}
-        >
-          {`1 ${baseCurrency} = ${conversionRate} ${quoteCurrency} as of ${format(
-          new Date(date),
-          "MMMM do, yyyy"
-        )}`}
-        </Text>
-
-        <Button text="reverse" onPress={() => alert("TODO")} />
       </ScrollView>
     </View>
   );
