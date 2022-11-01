@@ -14,28 +14,30 @@ export const KeyboardSpacer = ({ style, onToggle = () => null }) => {
 
   useEffect(() => {
     // useEffect выполняется при рендеринге страницы и выполняет функцию в return после выхода с экрана
-
-    const updateKeyboardSpace = event => {
+    const updateKeyboardSpace = (event) => {
       if (!event.endCoordinates) {
         return;
       }
       const screenHeight = Dimensions.get("screen").height;
-      const newKeyboardSpace = screenHeight - event.endCoordinates.screenY;
+      let newKeyboardSpace = screenHeight - event.endCoordinates.screenY;
+      if (Platform.OS === "android") { // если андроид то место под клаву увеличивать не нужно 
+        newKeyboardSpace = 0; // и вообще можно всегда держать скролл вью включенным
+      }
       setKeyboardSpace(newKeyboardSpace);
       onToggle(true, newKeyboardSpace);
-      console.log(newKeyboardSpace)
+      console.log(newKeyboardSpace);
     };
     const showEvt =
       Platform.OS === "android" ? "keyboardDidShow" : "keyboardWillShow";
     const showListener = Keyboard.addListener(showEvt, updateKeyboardSpace);
 
     const resetKeyboardSpace = () => {
-      console.log(0)
+      console.log(0);
       setKeyboardSpace(0);
       onToggle(false, 0);
     };
     const hideEvt =
-      Platform.OS === "android" ? "keyboardDidHide" : "keyboardWillHide"
+      Platform.OS === "android" ? "keyboardDidHide" : "keyboardWillHide";
     const hideListener = Keyboard.addListener(hideEvt, resetKeyboardSpace);
 
     return () => {

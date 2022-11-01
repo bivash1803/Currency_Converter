@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import {
   View,
@@ -8,6 +8,7 @@ import {
   Dimensions,
   Text,
   ScrollView,
+  Platform,
 } from "react-native";
 import { ConversionInput } from "../components/ConversionInput";
 import { Button } from "../components/Button";
@@ -61,8 +62,6 @@ export default () => {
 
   const [scrollEbabled, setScrollEnabled] = useState(false);
 
-
-
   return (
     <View style={styles.container}>
       <StatusBar // не элемент а просто найстройка
@@ -108,7 +107,7 @@ export default () => {
           </Text>
 
           <Button text="reverse" onPress={() => alert("TODO")} />
-          <KeyboardSpacer onToggle={visible => setScrollEnabled(visible)} />
+          <KeyboardSpacer onToggle={(visible) => setScrollEnabled(visible)} />
         </View>
       </ScrollView>
     </View>
