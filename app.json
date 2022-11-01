@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "CurrencyConverter",
+    "description": "my app",
     "slug": "CurrencyConverter",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,12 +26,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "androidStatusBar" : {
+      "androidStatusBar": {
         "translucent": false
-      }
+      },
+      "package": "com.fedek1324.CurrencyConverter"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4a627342-3649-4e23-bf0c-5d4600872bc1"
+      }
     }
   }
 }

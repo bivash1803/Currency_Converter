@@ -8,12 +8,15 @@ import {
   Dimensions,
   Text,
   ScrollView,
-  Platform,
+  TouchableOpacity,
 } from "react-native";
+import {  SafeAreaView } from "react-native-safe-area-context"
+import { Entypo } from "@expo/vector-icons";
 import { ConversionInput } from "../components/ConversionInput";
 import { Button } from "../components/Button";
 import colors from "../constants/colors";
 import { KeyboardSpacer } from "../components/KeyboardSpacer";
+
 
 const screen = Dimensions.get("window");
 
@@ -24,7 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    paddingTop: screen.width * 0.2,
+    paddingTop: screen.width * 0.1,
   },
   logoContainer: {
     justifyContent: "center",
@@ -52,9 +55,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
   },
+  header: {
+    alignItems: "flex-end",
+    marginHorizontal: 20
+  }
 });
 
-export default () => {
+export default ({ navigation }) => {
   const baseCurrency = "USD";
   const quoteCurrency = "GBP";
   const conversionRate = 0.845;
@@ -68,6 +75,11 @@ export default () => {
         barStyle="light-content"
         backgroundColor={colors.blue}
       />
+      <SafeAreaView style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.push("Options")}>
+          <Entypo name="cog" size={32} color={colors.white} />
+        </TouchableOpacity>
+      </SafeAreaView>
       <ScrollView scrollEnabled={scrollEbabled}>
         <View style={styles.content}>
           <View style={styles.logoContainer}>
@@ -87,7 +99,7 @@ export default () => {
 
           <ConversionInput
             text={baseCurrency}
-            onButtonPress={() => alert("Hi")}
+            onButtonPress={() => navigation.push("CurrencyList", {title: "Base currency"})}
             keyboardType="numeric"
             onChangeText={(text) => console.log("text", text)}
           />
@@ -95,7 +107,7 @@ export default () => {
           <ConversionInput
             text={quoteCurrency}
             value="123"
-            onButtonPress={() => alert("todo!")}
+            onButtonPress={() => navigation.push("CurrencyList", {title: "Quote currency"})}
             editable={false} // отключает ввод
           />
 

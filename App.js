@@ -1,4 +1,4 @@
 import React from "react";
-import Home from "./App/screens/Home";
+import Navigation from "./App/config/navigation";
 
-export default () => <Home /> // its JSX
+export default () => <Navigation /> // its JSX
