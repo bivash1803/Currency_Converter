@@ -108,7 +108,7 @@ export default ({ navigation }) => {
 
           <Text style={styles.textHeader}>Currency Converter</Text>
           {isLoading ? (
-            <ActivityIndicator />
+            <ActivityIndicator size="large" color={colors.white}>
           ) : (
             <>
               <View style={styles.inputContainer}>
