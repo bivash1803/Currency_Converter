@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { format } from "date-fns";
 import {
   View,
@@ -9,14 +9,15 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import {  SafeAreaView } from "react-native-safe-area-context"
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { ConversionInput } from "../components/ConversionInput";
 import { Button } from "../components/Button";
 import colors from "../constants/colors";
 import { KeyboardSpacer } from "../components/KeyboardSpacer";
-
+import { ConversionContext } from "../util/ConversionContext";
 
 const screen = Dimensions.get("window");
 
@@ -57,15 +58,25 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "flex-end",
-    marginHorizontal: 20
-  }
+    marginHorizontal: 20,
+  },
+  inputContainer: {
+    marginBottom: 10,
+  },
 });
 
 export default ({ navigation }) => {
-  const baseCurrency = "USD";
-  const quoteCurrency = "GBP";
-  const conversionRate = 0.845;
-  const date = "2022-10-27";
+  const {
+    baseCurrency,
+    quoteCurrency,
+    swapCurrencies,
+    date,
+    rates,
+    isLoading,
+  } = useContext(ConversionContext);
+
+  const [value, setValue] = useState("1");
+  const conversionRate = rates[quoteCurrency];
 
   const [scrollEbabled, setScrollEnabled] = useState(false);
 
@@ -96,29 +107,50 @@ export default ({ navigation }) => {
           </View>
 
           <Text style={styles.textHeader}>Currency Converter</Text>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <>
+              <View style={styles.inputContainer}>
+                <ConversionInput
+                  text={baseCurrency}
+                  value={`${value}`} // by default is 1 but we change it when we type
+                  onChangeText={(text) => setValue(text)} // we set value
+                  onButtonPress={() =>
+                    navigation.push("CurrencyList", {
+                      title: "Base currency",
+                      isBaseCurrency: true,
+                    })
+                  }
+                  keyboardType="numeric"
+                />
 
-          <ConversionInput
-            text={baseCurrency}
-            onButtonPress={() => navigation.push("CurrencyList", {title: "Base currency"})}
-            keyboardType="numeric"
-            onChangeText={(text) => console.log("text", text)}
-          />
+                <ConversionInput
+                  text={quoteCurrency}
+                  value={
+                    value &&
+                    `${(parseFloat(value) * conversionRate).toFixed(2)}`
+                  }
+                  onButtonPress={() =>
+                    navigation.push("CurrencyList", {
+                      title: "Quote currency",
+                      isBaseCurrency: false,
+                    })
+                  }
+                  editable={false} // отключает ввод
+                />
+              </View>
 
-          <ConversionInput
-            text={quoteCurrency}
-            value="123"
-            onButtonPress={() => navigation.push("CurrencyList", {title: "Quote currency"})}
-            editable={false} // отключает ввод
-          />
+              <Text style={styles.text}>
+                {`1 ${baseCurrency} = ${conversionRate} ${quoteCurrency} as of ${
+                  date && format(new Date(date), "MMMM do, yyyy")
+                }`}
+              </Text>
 
-          <Text style={styles.text}>
-            {`1 ${baseCurrency} = ${conversionRate} ${quoteCurrency} as of ${format(
-              new Date(date),
-              "MMMM do, yyyy"
-            )}`}
-          </Text>
+              <Button text="reverse" onPress={swapCurrencies} />
+            </>
+          )}
 
-          <Button text="reverse" onPress={() => alert("TODO")} />
           <KeyboardSpacer onToggle={(visible) => setScrollEnabled(visible)} />
         </View>
       </ScrollView>
